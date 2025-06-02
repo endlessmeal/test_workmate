@@ -1,0 +1,15 @@
+[project]
+name = "salary_report"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "nazar", email = "baloyan99@list.ru"},
+]
+dependencies = ["pytest>=8.3.5"]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
