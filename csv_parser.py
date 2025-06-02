@@ -22,21 +22,30 @@ def parse_csv_file(file: TextIO) -> list[Employee]:
     # Создаем отображение названий колонок на их индексы
     col_indices = {col: idx for idx, col in enumerate(header)}
     
+    # Проверяем наличие всех необходимых колонок
+    required_columns = {'id', 'email', 'name', 'department', 'hours_worked'}
+    missing_columns = required_columns - set(col_indices.keys())
+    if missing_columns:
+        raise ValueError(f"В CSV файле отсутствуют обязательные колонки: {', '.join(missing_columns)}")
+    
     employees = []
     for line in file:
         values = line.strip().split(',')
         if len(values) != len(header):
             continue  # Пропускаем некорректные строки
             
-        employee = Employee(
-            id=int(values[col_indices['id']]),
-            email=values[col_indices['email']],
-            name=values[col_indices['name']],
-            department=values[col_indices['department']],
-            hours_worked=float(values[col_indices['hours_worked']]),
-            hourly_rate=float(values[col_indices[rate_col]])
-        )
-        employees.append(employee)
+        try:
+            employee = Employee(
+                id=int(values[col_indices.get('id')]),
+                email=values[col_indices.get('email')],
+                name=values[col_indices.get('name')],
+                department=values[col_indices.get('department')],
+                hours_worked=float(values[col_indices.get('hours_worked')]),
+                hourly_rate=float(values[col_indices.get(rate_col)])
+            )
+            employees.append(employee)
+        except (ValueError, TypeError) as e:
+            continue  # Пропускаем строки с некорректными данными
     
     return employees
 
